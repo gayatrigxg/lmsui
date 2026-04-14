@@ -5,7 +5,7 @@ import SwiftUI
 struct lmsuiApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView()  // ← this now renders HomeDashboardView
         }
     }
 }
