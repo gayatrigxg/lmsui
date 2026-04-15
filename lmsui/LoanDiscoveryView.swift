@@ -1,8 +1,6 @@
 import SwiftUI
 import Combine
 
-// MARK: - Color Theme (Reuse from previous, included here for completeness)
-
 // MARK: - Models
 struct LoanProduct: Identifiable, Hashable {
     let id = UUID()
@@ -28,42 +26,40 @@ class LoanMarketplaceViewModel: ObservableObject {
 // MARK: - Marketplace Screen (Feature 4.1)
 struct LoanMarketplaceView: View {
     @StateObject var viewModel = LoanMarketplaceViewModel()
+    @EnvironmentObject var router: Router
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    
-                    // Header
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Loan Marketplace")
-                            .font(.largeTitle).bold()
-                            .foregroundColor(.primary)
-                        Text("Find the perfect loan for your needs.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 10)
-                    
-                    // Loan Cards List
-                    LazyVStack(spacing: 16) {
-                        ForEach(viewModel.availableLoans) { loan in
-                            NavigationLink(value: loan) {
-                                LoanProductCard(loan: loan)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 30)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Loan Marketplace")
+                        .font(.largeTitle).bold()
+                        .foregroundColor(.primary)
+                    Text("Find the perfect loan for your needs.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
-            }
-            .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
-            .navigationDestination(for: LoanProduct.self) { loan in
-                LoanDetailScreen(loan: loan)
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                
+                // Loan Cards List
+                LazyVStack(spacing: 16) {
+                    ForEach(viewModel.availableLoans) { loan in
+                        Button {
+                            router.push(.loanDetail(loan))
+                        } label: {
+                            LoanProductCard(loan: loan)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 30)
             }
         }
+        .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
     }
 }
 
@@ -140,6 +136,7 @@ struct LoanProductCard: View {
 // MARK: - Loan Detail Screen (Feature 4.2 & 4.4)
 struct LoanDetailScreen: View {
     let loan: LoanProduct
+    @EnvironmentObject var router: Router
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -167,30 +164,38 @@ struct LoanDetailScreen: View {
                     }
                     .padding(.top, 20)
                     
-                    // Eligibility Checker Banner
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Check your eligibility")
-                                .font(.headline)
-                            Text("Takes 2 minutes. No impact on credit score.")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .lineLimit(2)
+                    // Comparison & Eligibility Buttons
+                    HStack(spacing: 16) {
+                        Button {
+                            router.push(.loanComparison(loan))
+                        } label: {
+                            HStack {
+                                Image(systemName: "arrow.left.arrow.right")
+                                Text("Compare Options")
+                            }
+                            .font(.subheadline).bold()
+                            .foregroundColor(.mainBlue)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color.lightBlue)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
-                        Spacer()
-                        Button("Check") {
-                            // Action to open Eligibility Checker Screen
+                        
+                        Button {
+                            router.push(.eligibilityChecker(loan))
+                        } label: {
+                            HStack {
+                                Image(systemName: "checkmark.shield")
+                                Text("Check Eligibility")
+                            }
+                            .font(.subheadline).bold()
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color.secondaryBlue)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
-                        .font(.subheadline).bold()
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(Color.secondaryBlue)
-                        .clipShape(Capsule())
                     }
-                    .padding(16)
-                    .background(Color.lightBlue.opacity(0.5))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.horizontal, 20)
                     
                     // Features List Placeholder
@@ -212,7 +217,7 @@ struct LoanDetailScreen: View {
             VStack {
                 Divider()
                 Button {
-                    // Navigate to Feature 5: Start Application Screen
+                    router.push(.startApplication) // Routing to Start Application
                 } label: {
                     Text("Apply Now")
                         .font(.headline)

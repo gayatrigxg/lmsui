@@ -21,6 +21,7 @@ class LoanApplicationViewModel: ObservableObject {
 
 struct LoanApplicationView: View {
     @StateObject var viewModel = LoanApplicationViewModel()
+    @EnvironmentObject var router: Router // Added Router here
     
     var body: some View {
         VStack(spacing: 0) {
@@ -129,7 +130,7 @@ struct LoanApplicationView: View {
                     Spacer()
                     
                     Button {
-                        // Action: Proceed to Document Upload
+                        router.push(.documentUpload) // Routing to Document Upload
                     } label: {
                         Text("Continue")
                             .font(.headline)
