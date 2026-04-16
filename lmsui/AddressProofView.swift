@@ -344,13 +344,14 @@ private enum AddressDocumentType: CaseIterable, Hashable {
         case .aadhaarCard:
             return "person.text.rectangle"
         case .utilityBill:
-            return "bolt.text.page"
+            return "bolt.fill"
         case .bankStatement:
             return "building.columns"
         case .rentalAgreement:
             return "doc.text"
         }
     }
+
 }
 
 private enum AddressUploadAction: Hashable {
