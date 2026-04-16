@@ -3,6 +3,8 @@ import SwiftUI
 struct KYCVerificationSuccessView: View {
     @Environment(\.dismiss) private var dismiss
 
+    var onBackToReview: (() -> Void)?
+
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
@@ -34,7 +36,11 @@ struct KYCVerificationSuccessView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    dismiss()
+                    if let onBackToReview {
+                        onBackToReview()
+                    } else {
+                        dismiss()
+                    }
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
