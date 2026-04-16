@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  lmsui
-//
-//  Created by Gayatri Goundadkar on 14/04/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
@@ -13,10 +6,6 @@ struct ContentView: View {
             CompleteProfileView()
         }
     }
-}
-
-#Preview {
-    ContentView()
 }
 
 #Preview {

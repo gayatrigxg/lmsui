@@ -4,434 +4,405 @@ struct IncomeDetailsView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var selectedDocument: IncomeDocumentType?
-    @State private var uploadState: IncomeUploadState = .empty
-    @State private var isUploadHighlighted = false
-    @State private var uploadedFiles: [IncomeFileItem] = []
+    @State private var selectedAction: IncomeUploadAction?
+    @State private var uploadedItems: [String] = []
     @State private var showReviewSummary = false
 
+    private var hasPreview: Bool {
+        !uploadedItems.isEmpty
+    }
+
     var body: some View {
-        ZStack {
-            Color.appBackground
-                .ignoresSafeArea()
+        VStack(spacing: 0) {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 28) {
+                    headerSection
+                    documentSection
 
-            VStack(spacing: 0) {
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: AppSpacing.xl) {
-                        progressSection
-                            .padding(.top, AppSpacing.md)
-
-                        mainCard
+                    if let selectedDocument {
+                        selectionSummary(document: selectedDocument)
+                        uploadOptionsSection
                     }
-                    .padding(.horizontal, AppSpacing.lg)
-                    .padding(.bottom, 120)
-                }
 
-                bottomCTA
+                    if hasPreview {
+                        uploadedPreviewSection
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 28)
+            }
+
+            if hasPreview {
+                bottomBar
             }
         }
+        .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
+        .navigationTitle("Income Proof")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationDestination(isPresented: $showReviewSummary) {
             KYCSubmissionSummaryView()
         }
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItem(placement: .topBarLeading) {
                 Button {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(Color.secondaryBlue)
-                        .frame(width: 44, height: 44)
                 }
-                .accessibilityLabel("Back")
-            }
-
-            ToolbarItem(placement: .principal) {
-                Text("Verify Your Identity")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(Color.secondaryBlue)
             }
         }
     }
 
-    private var progressSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            HStack(alignment: .top, spacing: 8) {
-                progressStep(title: "Identity", state: .completed)
-                progressConnector(isActive: true)
-                progressStep(title: "Address", state: .completed)
-                progressConnector(isActive: true)
-                progressStep(title: "Income", state: .current)
-            }
+    private var headerSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Add income proof")
+                .font(.system(size: 30, weight: .bold))
+                .foregroundStyle(.primary)
 
-            Text("Step 3 of 3")
-                .font(AppFont.bodyMedium())
-                .foregroundStyle(Color.textSecondary)
-        }
-        .padding(AppSpacing.lg)
-        .appCardStyle()
-    }
-
-    private var mainCard: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.lg) {
-            VStack(alignment: .leading, spacing: AppSpacing.sm) {
-                Text("Upload Income Proof")
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(Color.secondaryBlue)
-
-                Text("Provide documents that verify your income to assess your repayment capacity.")
-                    .font(AppFont.body())
-                    .foregroundStyle(Color.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            documentTypeChips
-
-            if let helperText {
-                Text(helperText)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(Color.secondaryBlue)
-                    .padding(.horizontal, 2)
-            }
-
-            uploadStateView
-
-            Text("Make sure your name and income details are clearly visible.")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundStyle(Color.textSecondary)
+            Text("Choose a document that helps verify your income.")
+                .font(.system(size: 17))
+                .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(AppSpacing.lg)
-        .appCardStyle()
     }
 
-    private var documentTypeChips: some View {
-        HStack(spacing: 10) {
-            ForEach(IncomeDocumentType.allCases, id: \.self) { type in
-                incomeChip(for: type)
+    private var documentSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Document")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(.secondary)
+
+            VStack(spacing: 0) {
+                documentRow(.salarySlip)
+                divider
+                documentRow(.bankStatement)
+                divider
+                documentRow(.itr)
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        }
+    }
+
+    private func documentRow(_ type: IncomeDocumentType) -> some View {
+        let isSelected = selectedDocument == type
+
+        return Button {
+            selectedDocument = type
+            selectedAction = nil
+            uploadedItems = []
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: type.icon)
+                    .font(.system(size: 17, weight: .medium))
+                    .foregroundStyle(.blue)
+                    .frame(width: 36, height: 36)
+                    .background(Color.blue.opacity(0.10))
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(type.title)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.primary)
+
+                    Text(type.subtitle)
+                        .font(.system(size: 15))
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 22))
+                    .foregroundStyle(isSelected ? .blue : Color(uiColor: .tertiaryLabel))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func selectionSummary(document: IncomeDocumentType) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: document.icon)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(.blue)
+                .frame(width: 34, height: 34)
+                .background(Color.blue.opacity(0.10))
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Selected document")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(.secondary)
+
+                Text(document.title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(.primary)
+            }
+
+            Spacer()
+        }
+        .padding(14)
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    private var uploadOptionsSection: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("How do you want to add it?")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.primary)
+
+                Text(uploadHint)
+                    .font(.system(size: 15))
+                    .foregroundStyle(.secondary)
+            }
+
+            HStack(spacing: 12) {
+                uploadOptionButton(.digiLocker)
+                uploadOptionButton(.files)
+                uploadOptionButton(.camera)
             }
         }
     }
 
-    @ViewBuilder
-    private var uploadStateView: some View {
-        switch uploadState {
-        case .empty, .partial:
-            VStack(alignment: .leading, spacing: 12) {
-                Button {
-                    handleMockUpload()
-                } label: {
-                    VStack(spacing: 14) {
-                        Image(systemName: "doc.badge.plus")
-                            .font(.system(size: 30, weight: .medium))
-                            .foregroundStyle(Color.primaryBlue)
+    private func uploadOptionButton(_ action: IncomeUploadAction) -> some View {
+        let isSelected = selectedAction == action
 
-                        Text("Upload from Files")
-                            .font(AppFont.bodyMedium())
-                            .foregroundStyle(Color.secondaryBlue)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 168)
-                    .background(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .fill(Color.primaryBlue.opacity(isUploadHighlighted ? 0.10 : 0.04))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(
-                                isUploadHighlighted ? Color.secondaryBlue : Color.primaryBlue.opacity(0.55),
-                                style: StrokeStyle(lineWidth: 1.5, dash: [8, 6])
-                            )
-                    )
+        return Button {
+            selectedAction = action
+            uploadedItems = mockUploads(for: action)
+        } label: {
+            VStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(isSelected ? Color.blue : Color.blue.opacity(0.10))
+                        .frame(width: 54, height: 54)
+
+                    Image(systemName: action.icon)
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(isSelected ? .white : .blue)
                 }
-                .buttonStyle(.plain)
-                .disabled(selectedDocument == nil)
-                .opacity(selectedDocument == nil ? 0.55 : 1)
 
-                Button {
-                    handleMockUpload()
-                } label: {
-                    Text("Take Photo")
-                        .font(AppFont.button())
-                        .foregroundStyle(Color.primaryBlue)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 52)
-                        .background(Color.white)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: AppRadius.button, style: .continuous)
-                                .stroke(Color.primaryBlue, lineWidth: 1.5)
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.button, style: .continuous))
-                }
-                .disabled(selectedDocument == nil)
-                .opacity(selectedDocument == nil ? 0.55 : 1)
+                VStack(spacing: 2) {
+                    Text(action.title)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.center)
 
-                if selectedDocument == .salarySlip {
-                    uploadProgressCard
-                    uploadedFilesStrip
-                } else if !uploadedFiles.isEmpty {
-                    uploadedFilesStrip
-                }
-            }
-
-        case .uploaded:
-            VStack(alignment: .leading, spacing: 12) {
-                uploadedFilesStrip
-
-                Button("Replace Document") {
-                    withAnimation(.easeOut(duration: 0.2)) {
-                        uploadedFiles = []
-                        uploadState = .empty
+                    if action == .digiLocker {
+                        Text("Recommended")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(.blue)
                     }
                 }
-                .font(AppFont.bodyMedium())
-                .foregroundStyle(Color.primaryBlue)
             }
-
-        case .error:
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(Color.accentRed)
-
-                    Text("Incomplete or unclear income proof")
-                        .font(AppFont.bodyMedium())
-                        .foregroundStyle(Color.accentRed)
-                }
-
-                Text("Please upload a clearer or complete income document.")
-                    .font(AppFont.body())
-                    .foregroundStyle(Color.textSecondary)
-            }
-            .padding(AppSpacing.md)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(Color.accentRed.opacity(0.06))
-            )
+            .frame(maxWidth: .infinity)
+            .frame(height: 126)
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .stroke(Color.accentRed.opacity(0.28), lineWidth: 1)
+                    .stroke(isSelected ? Color.blue.opacity(0.35) : Color.clear, lineWidth: 1.5)
             )
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
+        .buttonStyle(.plain)
     }
 
-    private var uploadProgressCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("\(uploadedFiles.count)/3 files uploaded")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundStyle(Color.secondaryBlue)
+    private var uploadedPreviewSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Added")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(.secondary)
 
-            ProgressView(value: Double(uploadedFiles.count), total: 3)
-                .tint(Color.primaryBlue)
-        }
-        .padding(AppSpacing.md)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.primaryBlue.opacity(0.05))
-        )
-    }
-
-    private var uploadedFilesStrip: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                ForEach(uploadedFiles) { file in
-                    VStack(alignment: .leading, spacing: 10) {
+            VStack(spacing: 12) {
+                ForEach(uploadedItems, id: \.self) { item in
+                    HStack(spacing: 14) {
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.primaryBlue.opacity(0.18), Color.secondaryBlue.opacity(0.10)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(width: 110, height: 82)
-                            .overlay(
-                                Image(systemName: "doc.text.fill")
-                                    .font(.system(size: 24))
-                                    .foregroundStyle(Color.primaryBlue)
-                            )
+                            .fill(Color.blue.opacity(0.10))
+                            .frame(width: 52, height: 64)
+                            .overlay {
+                                Image(systemName: previewIcon)
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundStyle(.blue)
+                            }
 
-                        Text(file.name)
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundStyle(Color.textPrimary)
-                            .lineLimit(1)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(item)
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(.primary)
+
+                            Text(previewSubtitle)
+                                .font(.system(size: 14))
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 20))
+                            .foregroundStyle(.blue)
                     }
-                    .frame(width: 110)
-                    .padding(10)
-                    .background(Color.white)
+                    .padding(14)
+                    .background(Color(uiColor: .secondarySystemGroupedBackground))
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.primaryBlue.opacity(0.12), lineWidth: 1)
-                    )
                 }
             }
         }
     }
 
-    private var bottomCTA: some View {
-        VStack(spacing: AppSpacing.sm) {
-            Divider()
-                .overlay(Color.dividerLight)
-
+    private var bottomBar: some View {
+        VStack(spacing: 8) {
             Button {
                 showReviewSummary = true
             } label: {
                 Text("Continue")
+                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(PrimaryCTAButtonStyle())
-            .disabled(!canContinue)
-            .opacity(canContinue ? 1 : 0.55)
-            .padding(.horizontal, AppSpacing.lg)
-            .padding(.top, AppSpacing.md)
-            .padding(.bottom, AppSpacing.lg)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.roundedRectangle(radius: 16))
+            .controlSize(.large)
+            .tint(.blue)
+
+            Text("You can review this before submitting")
+                .font(.system(size: 13))
+                .foregroundStyle(.secondary)
         }
-        .background(Color.appBackground)
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 10)
+        .background(.regularMaterial)
     }
 
-    private func incomeChip(for type: IncomeDocumentType) -> some View {
-        let isSelected = selectedDocument == type
-
-        return Button {
-            withAnimation(.easeOut(duration: 0.2)) {
-                selectedDocument = type
-                uploadedFiles = []
-                uploadState = .empty
-            }
-        } label: {
-            Text(type.rawValue)
-                .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(isSelected ? Color.white : Color.secondaryBlue)
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(isSelected ? Color.primaryBlue : Color.appBackground)
-                .clipShape(Capsule())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(type.rawValue)
-    }
-
-    private func progressStep(title: String, state: IncomeStepState) -> some View {
-        VStack(spacing: 8) {
-            ZStack {
-                switch state {
-                case .completed:
-                    Circle()
-                        .fill(Color.primaryBlue)
-                        .frame(width: 30, height: 30)
-
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(Color.white)
-
-                case .current:
-                    Circle()
-                        .stroke(Color.primaryBlue, lineWidth: 2)
-                        .frame(width: 30, height: 30)
-
-                    Circle()
-                        .fill(Color.primaryBlue.opacity(0.12))
-                        .frame(width: 16, height: 16)
-                }
-            }
-
-            Text(title)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(state == .current ? Color.secondaryBlue : Color.textSecondary)
-                .frame(maxWidth: .infinity)
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    private func progressConnector(isActive: Bool) -> some View {
-        Capsule()
-            .fill(isActive ? Color.primaryBlue : Color.inactiveStep)
-            .frame(height: 4)
-            .padding(.top, 13)
-    }
-
-    private func handleMockUpload() {
-        guard let selectedDocument else { return }
-
-        withAnimation(.easeOut(duration: 0.2)) {
-            isUploadHighlighted = true
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            withAnimation(.easeOut(duration: 0.2)) {
-                isUploadHighlighted = false
-
-                switch selectedDocument {
-                case .salarySlip:
-                    let nextIndex = uploadedFiles.count + 1
-                    guard nextIndex <= 3 else { return }
-
-                    uploadedFiles.append(
-                        IncomeFileItem(name: "Salary Slip \(nextIndex)")
-                    )
-
-                    uploadState = uploadedFiles.count == 3 ? .uploaded : .partial
-
-                case .bankStatement:
-                    uploadedFiles = [IncomeFileItem(name: "Bank Statement")]
-                    uploadState = .uploaded
-
-                case .itr:
-                    uploadedFiles = [IncomeFileItem(name: "Latest ITR")]
-                    uploadState = .uploaded
-                }
-            }
-        }
-    }
-
-    private var helperText: String? {
+    private var uploadHint: String {
         switch selectedDocument {
         case .salarySlip:
-            return "Upload last 3 months' salary slips"
+            return "Add your latest 3 salary slips."
         case .bankStatement:
-            return "Upload last 6 months' bank statement"
+            return "Add a recent bank statement."
         case .itr:
-            return "Upload latest filed ITR document"
+            return "Add your latest ITR."
         case .none:
-            return nil
+            return ""
         }
     }
 
-    private var canContinue: Bool {
-        guard selectedDocument != nil else { return false }
+    private var previewSubtitle: String {
+        switch selectedAction {
+        case .digiLocker:
+            return "Added with DigiLocker"
+        case .files:
+            return "Added from Files"
+        case .camera:
+            return "Captured with Camera"
+        case .none:
+            return "Added"
+        }
+    }
+
+    private var previewIcon: String {
+        switch selectedAction {
+        case .digiLocker:
+            return "lock.doc"
+        case .files:
+            return "doc.fill"
+        case .camera:
+            return "camera.fill"
+        case .none:
+            return "doc"
+        }
+    }
+
+    private func mockUploads(for action: IncomeUploadAction) -> [String] {
+        guard let selectedDocument else { return [] }
 
         switch selectedDocument {
         case .salarySlip:
-            return uploadedFiles.count == 3
-        case .bankStatement, .itr:
-            return !uploadedFiles.isEmpty
-        case .none:
-            return false
+            return ["Salary Slip 1", "Salary Slip 2", "Salary Slip 3"]
+        case .bankStatement:
+            return ["Bank Statement"]
+        case .itr:
+            return ["Latest ITR"]
+        }
+    }
+
+    private var divider: some View {
+        Divider()
+            .padding(.leading, 66)
+    }
+}
+
+private enum IncomeDocumentType: CaseIterable, Hashable {
+    case salarySlip
+    case bankStatement
+    case itr
+
+    var title: String {
+        switch self {
+        case .salarySlip:
+            return "Salary Slip"
+        case .bankStatement:
+            return "Bank Statement"
+        case .itr:
+            return "ITR"
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .salarySlip:
+            return "Last 3 months preferred"
+        case .bankStatement:
+            return "Recent statement"
+        case .itr:
+            return "Latest filed return"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .salarySlip:
+            return "doc.text"
+        case .bankStatement:
+            return "building.columns"
+        case .itr:
+            return "indianrupeesign.square"
         }
     }
 }
 
-private enum IncomeDocumentType: String, CaseIterable {
-    case salarySlip = "Salary Slip"
-    case bankStatement = "Bank Statement"
-    case itr = "ITR"
-}
+private enum IncomeUploadAction: Hashable {
+    case digiLocker
+    case files
+    case camera
 
-private enum IncomeUploadState {
-    case empty
-    case partial
-    case uploaded
-    case error
-}
+    var title: String {
+        switch self {
+        case .digiLocker:
+            return "DigiLocker"
+        case .files:
+            return "Files"
+        case .camera:
+            return "Camera"
+        }
+    }
 
-private enum IncomeStepState {
-    case completed
-    case current
-}
-
-private struct IncomeFileItem: Identifiable {
-    let id = UUID()
-    let name: String
+    var icon: String {
+        switch self {
+        case .digiLocker:
+            return "lock.shield"
+        case .files:
+            return "doc"
+        case .camera:
+            return "camera"
+        }
+    }
 }
 
 #Preview {
