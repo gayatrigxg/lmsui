@@ -37,8 +37,6 @@ struct KYCStatusView: View {
                         KYCDocRow(title: "PAN Card", docID: "ABCDE1234F", date: "Verified on 12 Jan 2025")
                         Divider().padding(.leading, 20)
                         KYCDocRow(title: "Aadhaar Card", docID: "XXXX XXXX 1234", date: "Verified on 12 Jan 2025")
-                        Divider().padding(.leading, 20)
-                        KYCDocRow(title: "Bank Account", docID: "HDFC Bank •••• 4567", date: "Verified on 14 Jan 2025")
                     }
                     .background(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 16))

@@ -70,7 +70,7 @@ struct HeaderView: View {
 
     var body: some View {
         HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 1) {
                 Text("Good Morning,")
                     .font(.body)
                     .foregroundColor(.white.opacity(0.80))
