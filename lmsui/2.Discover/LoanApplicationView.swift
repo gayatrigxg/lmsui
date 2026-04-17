@@ -158,9 +158,11 @@ struct LoanApplicationView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        LoanApplicationView(loan: LoanProduct(title: "Personal Loan", icon: "person", maxAmount: 500000, interestRate: "10.5%", minTenure: 6, maxTenure: 60, tags: []))
-            .environmentObject(Router())
+struct LoanApplicationView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            LoanApplicationView(loan: LoanProduct(title: "Personal Loan", icon: "person", maxAmount: 500000, interestRate: "10.5%", minTenure: 6, maxTenure: 60, tags: []))
+                .environmentObject(Router())
+        }
     }
 }

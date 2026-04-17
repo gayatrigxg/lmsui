@@ -5,58 +5,72 @@ import Combine
 struct HomeDashboardView: View {
     @EnvironmentObject var router: Router
     @StateObject var viewModel = HomeDashboardViewModel()
+    @State private var headerScrollOffset: CGFloat = 0
 
     var body: some View {
-        ZStack(alignment: .top) {
-            Color.lightBlue.ignoresSafeArea()
-            
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 0) {
+        GeometryReader { proxy in
+            let topInset = proxy.safeAreaInsets.top
+            let collapseProgress = min(max(-headerScrollOffset / 110, 0), 1)
 
-                    // ── 1. HEADER (Fixed Background) ───────────────
-                    HeaderView(userName: viewModel.userName)
+            ZStack(alignment: .top) {
+                Color.homeBackground.ignoresSafeArea()
+                HeaderGradientBackground()
+                    .frame(height: 300 + topInset)
+                    .ignoresSafeArea(edges: .top)
 
-                    // ── 2. LOAN SUMMARY CARDS (Paging Scroll) ──────
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(spacing: 16) {
-                            ForEach(viewModel.activeLoans) { loan in
-                                Button {
-                                    router.push(.activeLoanDetails)
-                                } label: {
-                                    LoanSummaryCardView(loan: loan)
-                                        .frame(width: UIScreen.main.bounds.width * 0.85)
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        HeaderScrollTracker()
+                            .frame(height: 0)
+
+                        HeaderView(userName: viewModel.userName, collapseProgress: collapseProgress)
+                            .padding(.top, topInset + 18)
+
+                        // ── 2. LOAN SUMMARY CARDS (Paging Scroll) ──────
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHStack(spacing: 16) {
+                                ForEach(viewModel.activeLoans) { loan in
+                                    Button {
+                                        router.push(.activeLoanDetails)
+                                    } label: {
+                                        LoanSummaryCardView(loan: loan)
+                                            .frame(width: UIScreen.main.bounds.width * 0.85)
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
                                 }
-                                .buttonStyle(PlainButtonStyle())
-        
                             }
+                            .scrollTargetLayout()
                         }
-                        .scrollTargetLayout() // Tells the scroll view to snap to these items
-                    }
-                    .scrollTargetBehavior(.viewAligned) // Standard iOS horizontal snapping
-                    .safeAreaPadding(.horizontal, 20)
-                    .padding(.top, 24)
-
-                    // ── 3. NEXT EMI BANNER ─────────────────────────
-                    NextEMIBannerView(emi: viewModel.nextEMI)
-                        .padding(.horizontal, 20)
+                        .scrollTargetBehavior(.viewAligned)
+                        .safeAreaPadding(.horizontal, 20)
                         .padding(.top, 18)
 
-                    // ── 4. QUICK ACTIONS ───────────────────────────
-                    QuickActionsGridView(actions: viewModel.quickActions)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 24)
+                        // ── 3. NEXT EMI BANNER ─────────────────────────
+                        NextEMIBannerView(emi: viewModel.nextEMI)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 18)
 
-                    // ── 5. CREDIBILITY SCORE (With Inner Buttons) ──
-                    Button {
-                        router.push(.credibilityOverview)
-                    } label: {
-                        CredibilityScoreCardView(score: viewModel.credibilityScore)
+                        // ── 4. QUICK ACTIONS ───────────────────────────
+                        QuickActionsGridView(actions: viewModel.quickActions)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 24)
+
+                        // ── 5. CREDIBILITY SCORE (With Inner Buttons) ──
+                        Button {
+                            router.push(.credibilityOverview)
+                        } label: {
+                            CredibilityScoreCardView(score: viewModel.credibilityScore)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
+                        .padding(.bottom, 40)
                     }
-                    .buttonStyle(PlainButtonStyle())
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                    .padding(.bottom, 40)
                 }
+                .coordinateSpace(name: "HomeDashboardScroll")
+                .onPreferenceChange(HeaderScrollOffsetKey.self) { headerScrollOffset = $0 }
+
+                HeaderTopBlurOverlay(collapseProgress: collapseProgress, topInset: topInset)
             }
         }
         .navigationBarHidden(true)
@@ -66,37 +80,162 @@ struct HomeDashboardView: View {
 // MARK: - 1. Header
 struct HeaderView: View {
     let userName: String
+    let collapseProgress: CGFloat
     @EnvironmentObject var router: Router
 
     var body: some View {
         HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("Good Morning,")
-                    .font(.body)
+                    .font(.subheadline.weight(.medium))
                     .foregroundColor(.white.opacity(0.80))
                 Text(userName)
-                    .font(.title).bold()
+                    .font(.system(size: 32 - (5 * collapseProgress), weight: .bold, design: .rounded))
                     .foregroundColor(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
             }
             Spacer()
 
-            // Notification Bell
             Button(action: {
                 router.push(.notifications)
             }) {
-                ZStack(alignment: .topTrailing) {
-                    Image(systemName: "bell.fill").font(.title2).foregroundColor(.white)
-                    Circle().fill(Color.alertRed).frame(width: 10, height: 10).offset(x: 3, y: -3)
-                }
+                NotificationButton()
             }
+            .buttonStyle(.plain)
         }
         .padding(.horizontal, 24)
-        .padding(.bottom, 22)
-        .padding(.top, 60) // Pushes content down safely from the dynamic island/notch
-        .background(
-            LinearGradient(colors: [.mainBlue, .secondaryBlue], startPoint: .topLeading, endPoint: .bottomTrailing)
-                .ignoresSafeArea(edges: .top) // Bleeds perfectly into the bezel without overlapping cards
-        )
+        .padding(.top, 14)
+        .padding(.bottom, 34 - (12 * collapseProgress))
+    }
+}
+
+struct HeaderGradientBackground: View {
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color.headerBlueTop,
+                    Color.headerBlueMid,
+                    Color.headerBlueBottom
+                ],
+                startPoint: UnitPoint(x: 0.15, y: 0.0),
+                endPoint: UnitPoint(x: 0.95, y: 0.88)
+            )
+
+            RadialGradient(
+                colors: [
+                    .white.opacity(0.26),
+                    .white.opacity(0.10),
+                    .clear
+                ],
+                center: UnitPoint(x: 0.15, y: 0.0),
+                startRadius: 12,
+                endRadius: 260
+            )
+            .offset(x: -20, y: -30)
+
+            LinearGradient(
+                colors: [
+                    .white.opacity(0.12),
+                    .clear,
+                    Color.headerBlueBottom.opacity(0.18)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            RadialGradient(
+                colors: [
+                    .white.opacity(0.18),
+                    .clear
+                ],
+                center: UnitPoint(x: 0.92, y: 0.1),
+                startRadius: 0,
+                endRadius: 150
+            )
+
+            LinearGradient(
+                colors: [
+                    Color.clear,
+                    Color.homeBackground.opacity(0.35),
+                    Color.homeBackground
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
+    }
+}
+
+struct HeaderTopBlurOverlay: View {
+    let collapseProgress: CGFloat
+    let topInset: CGFloat
+
+    var body: some View {
+        Rectangle()
+            .fill(.ultraThinMaterial)
+            .overlay(
+                LinearGradient(
+                    colors: [
+                        .white.opacity(0.10 + (0.15 * collapseProgress)),
+                        .white.opacity(0.02)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            .opacity(collapseProgress)
+            .frame(height: topInset + 52)
+            .ignoresSafeArea(edges: .top)
+            .allowsHitTesting(false)
+    }
+}
+
+struct NotificationButton: View {
+    var body: some View {
+        Circle()
+            .fill(.white.opacity(0.16))
+            .overlay(
+                Circle()
+                    .stroke(.white.opacity(0.10), lineWidth: 0.5)
+            )
+            .frame(width: 42, height: 42)
+            .overlay {
+                Image(systemName: "bell.fill")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.96))
+            }
+            .overlay(alignment: .topTrailing) {
+                Circle()
+                    .fill(Color.alertRed)
+                    .frame(width: 8, height: 8)
+                    .overlay(
+                        Circle()
+                            .stroke(.white.opacity(0.9), lineWidth: 1.5)
+                    )
+                    .offset(x: 0, y: 1)
+            }
+            .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 4)
+    }
+}
+
+struct HeaderScrollTracker: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear.preference(
+                key: HeaderScrollOffsetKey.self,
+                value: geometry.frame(in: .named("HomeDashboardScroll")).minY
+            )
+        }
+    }
+}
+
+struct HeaderScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
@@ -150,7 +289,7 @@ struct LoanSummaryCardView: View {
             }
         }
         .padding(22)
-        .background(Color.white)
+        .background(.white.opacity(0.96))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.mainBlue.opacity(0.3), lineWidth: 1.5))
         .shadow(color: Color.mainBlue.opacity(0.15), radius: 15, x: 0, y: 8)
@@ -195,7 +334,7 @@ struct NextEMIBannerView: View {
             .fixedSize(horizontal: true, vertical: false)
         }
         .padding(14)
-        .background(Color.white)
+        .background(.white.opacity(0.96))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(emi.isUrgent ? Color.alertRed.opacity(0.4) : Color.clear, lineWidth: 1.5))
         .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 4)
@@ -215,7 +354,7 @@ struct QuickActionsGridView: View {
             }
         }
         .padding(20)
-        .background(Color.white)
+        .background(.white.opacity(0.96))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 4)
     }
@@ -313,7 +452,7 @@ struct CredibilityScoreCardView: View {
             }
         }
         .padding(22)
-        .background(Color.white)
+        .background(.white.opacity(0.96))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.07), radius: 12, x: 0, y: 5)
     }
@@ -354,11 +493,13 @@ class HomeDashboardViewModel: ObservableObject {
     ]
 }
 
-#Preview {
-    TabView {
-        HomeDashboardView()
-            .environmentObject(Router())
-            .tabItem { Image(systemName: "house.fill"); Text("Home") }
+struct HomeDashboardView_Previews: PreviewProvider {
+    static var previews: some View {
+        TabView {
+            HomeDashboardView()
+                .environmentObject(Router())
+                .tabItem { Image(systemName: "house.fill"); Text("Home") }
+        }
+        .accentColor(Color.mainBlue)
     }
-    .accentColor(Color.mainBlue)
 }

@@ -94,6 +94,8 @@ struct InsightRow: View {
     }
 }
 
-#Preview {
-    SavingsInsightView()
+struct SavingsInsightView_Previews: PreviewProvider {
+    static var previews: some View {
+        SavingsInsightView()
+    }
 }

@@ -165,9 +165,11 @@ struct ReviewDataRow: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        ReviewApplicationView()
-            .environmentObject(Router())
+struct ReviewApplicationView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ReviewApplicationView()
+                .environmentObject(Router())
+        }
     }
 }

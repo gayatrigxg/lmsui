@@ -98,7 +98,9 @@ struct SubmitConfirmationView: View {
     }
 }
 
-#Preview {
-    SubmitConfirmationView()
-        .environmentObject(Router())
+struct SubmitConfirmationView_Previews: PreviewProvider {
+    static var previews: some View {
+        SubmitConfirmationView()
+            .environmentObject(Router())
+    }
 }

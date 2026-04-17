@@ -136,6 +136,8 @@ struct ChatPreviewRow: View {
     }
 }
 
-#Preview {
-    ChatListView().environmentObject(Router())
+struct ChatListView_Previews: PreviewProvider {
+    static var previews: some View {
+        ChatListView().environmentObject(Router())
+    }
 }

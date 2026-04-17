@@ -132,6 +132,8 @@ struct RepaymentNavRow: View {
     }
 }
 
-#Preview {
-    RepaymentDashboardView().environmentObject(Router())
+struct RepaymentDashboardView_Previews: PreviewProvider {
+    static var previews: some View {
+        RepaymentDashboardView().environmentObject(Router())
+    }
 }

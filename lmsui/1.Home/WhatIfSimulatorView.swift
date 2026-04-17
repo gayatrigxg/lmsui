@@ -156,6 +156,8 @@ struct WhatIfSimulatorView: View {
     }
 }
 
-#Preview {
-    WhatIfSimulatorView()
+struct WhatIfSimulatorView_Previews: PreviewProvider {
+    static var previews: some View {
+        WhatIfSimulatorView()
+    }
 }

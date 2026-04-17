@@ -190,8 +190,10 @@ struct CircularProgressView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        DocumentUploadView()
+struct DocumentUploadView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            DocumentUploadView()
+        }
     }
 }

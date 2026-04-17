@@ -149,6 +149,8 @@ struct AutoPaySetupView: View {
     }
 }
 
-#Preview {
-    AutoPaySetupView()
+struct AutoPaySetupView_Previews: PreviewProvider {
+    static var previews: some View {
+        AutoPaySetupView()
+    }
 }

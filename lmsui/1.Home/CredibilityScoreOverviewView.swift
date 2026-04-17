@@ -141,6 +141,8 @@ struct QuickPerkRow: View {
     }
 }
 
-#Preview {
-    CredibilityScoreOverviewView()
+struct CredibilityScoreOverviewView_Previews: PreviewProvider {
+    static var previews: some View {
+        CredibilityScoreOverviewView()
+    }
 }

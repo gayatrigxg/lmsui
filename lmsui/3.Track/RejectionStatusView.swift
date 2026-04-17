@@ -177,9 +177,11 @@ struct RejectionTimelineRow: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        RejectionStatusView()
-            .environmentObject(Router())
+struct RejectionStatusView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            RejectionStatusView()
+                .environmentObject(Router())
+        }
     }
 }

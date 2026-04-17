@@ -277,6 +277,8 @@ struct FeatureRow: View {
     }
 }
 
-#Preview {
-    ContentView()
+struct LoanDiscoveryView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }

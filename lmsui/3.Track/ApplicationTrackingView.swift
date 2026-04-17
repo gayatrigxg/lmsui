@@ -167,8 +167,10 @@ struct TimelineRow: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        ApplicationTrackingView()
+struct ApplicationTrackingView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ApplicationTrackingView()
+        }
     }
 }

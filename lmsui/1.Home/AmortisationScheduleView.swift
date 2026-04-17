@@ -361,6 +361,8 @@ struct SummaryPill: View {
     }
 }
 
-#Preview {
-    AmortisationScheduleView()
+struct AmortisationScheduleView_Previews: PreviewProvider {
+    static var previews: some View {
+        AmortisationScheduleView()
+    }
 }

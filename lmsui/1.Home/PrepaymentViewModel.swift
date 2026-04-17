@@ -119,6 +119,8 @@ struct PrepaymentCalculatorView: View {
     }
 }
 
-#Preview {
-    PrepaymentCalculatorView()
+struct PrepaymentCalculatorView_Previews: PreviewProvider {
+    static var previews: some View {
+        PrepaymentCalculatorView()
+    }
 }

@@ -194,8 +194,10 @@ struct DonutChartView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        LoanCostBreakdownView()
+struct LoanCostBreakdownView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            LoanCostBreakdownView()
+        }
     }
 }

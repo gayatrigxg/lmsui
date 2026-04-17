@@ -84,6 +84,8 @@ struct StatementDownloadView: View {
     }
 }
 
-#Preview {
-    StatementDownloadView()
+struct StatementDownloadView_Previews: PreviewProvider {
+    static var previews: some View {
+        StatementDownloadView()
+    }
 }
