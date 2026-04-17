@@ -311,8 +311,10 @@ private enum StepState {
     case upcoming
 }
 
-#Preview {
-    NavigationStack {
-        ReviewDocumentView()
+struct ReviewDocumentView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ReviewDocumentView()
+        }
     }
 }

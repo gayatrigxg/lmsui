@@ -88,8 +88,10 @@ struct KYCVerificationSuccessView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        KYCVerificationSuccessView()
+struct KYCVerificationSuccessView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            KYCVerificationSuccessView()
+        }
     }
 }

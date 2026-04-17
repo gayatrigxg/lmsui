@@ -65,8 +65,10 @@ struct KYCVerifyingView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        KYCVerifyingView()
+struct KYCVerifyingView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            KYCVerifyingView()
+        }
     }
 }

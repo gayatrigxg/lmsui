@@ -137,8 +137,10 @@ struct CompleteProfileView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        CompleteProfileView()
+struct CompleteProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            CompleteProfileView()
+        }
     }
 }

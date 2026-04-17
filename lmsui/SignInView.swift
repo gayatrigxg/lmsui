@@ -223,8 +223,10 @@ struct SignInView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        SignInView()
+struct SignInView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            SignInView()
+        }
     }
 }

@@ -382,8 +382,10 @@ private enum AddressUploadAction: Hashable {
     }
 }
 
-#Preview {
-    NavigationStack {
-        AddressProofView()
+struct AddressProofView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            AddressProofView()
+        }
     }
 }

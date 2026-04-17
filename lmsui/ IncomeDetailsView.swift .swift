@@ -6,7 +6,7 @@ struct IncomeDetailsView: View {
     @State private var selectedDocument: IncomeDocumentType?
     @State private var selectedAction: IncomeUploadAction?
     @State private var uploadedItems: [String] = []
-    @State private var showReviewSummary = false
+    @State private var showESignature = false
 
     private var hasPreview: Bool {
         !uploadedItems.isEmpty
@@ -41,8 +41,8 @@ struct IncomeDetailsView: View {
         .navigationTitle("Income Proof")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .navigationDestination(isPresented: $showReviewSummary) {
-            KYCSubmissionSummaryView()
+        .navigationDestination(isPresented: $showESignature) {
+            ESignatureView()
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -52,6 +52,7 @@ struct IncomeDetailsView: View {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
                 }
+                .accessibilityLabel("Back")
             }
         }
     }
@@ -260,7 +261,7 @@ struct IncomeDetailsView: View {
     private var bottomBar: some View {
         VStack(spacing: 8) {
             Button {
-                showReviewSummary = true
+                showESignature = true
             } label: {
                 Text("Continue")
                     .frame(maxWidth: .infinity)
@@ -270,7 +271,7 @@ struct IncomeDetailsView: View {
             .controlSize(.large)
             .tint(.blue)
 
-            Text("You can review this before submitting")
+            Text("Next, you’ll sign to confirm your application")
                 .font(.system(size: 13))
                 .foregroundStyle(.secondary)
         }
@@ -405,8 +406,10 @@ private enum IncomeUploadAction: Hashable {
     }
 }
 
-#Preview {
-    NavigationStack {
-        IncomeDetailsView()
+struct IncomeDetailsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            IncomeDetailsView()
+        }
     }
 }

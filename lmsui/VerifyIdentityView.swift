@@ -366,8 +366,10 @@ private enum UploadAction: Hashable {
     }
 }
 
-#Preview {
-    NavigationStack {
-        VerifyIdentityView()
+struct VerifyIdentityView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            VerifyIdentityView()
+        }
     }
 }

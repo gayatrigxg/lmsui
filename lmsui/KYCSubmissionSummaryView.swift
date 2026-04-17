@@ -67,18 +67,7 @@ struct KYCSubmissionSummaryView: View {
             }
 
             Section {
-                Toggle(isOn: $isDeclarationAccepted) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Information is accurate")
-                            .font(.body)
-
-                        Text("I confirm these documents belong to me and can be used for verification.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
-                .tint(Color.blue)
+                declarationCheckbox
             } footer: {
                 Text("Your documents are encrypted and used only for verification.")
             }
@@ -207,6 +196,42 @@ struct KYCSubmissionSummaryView: View {
         .padding(.vertical, 6)
     }
 
+    private var declarationCheckbox: some View {
+        Button {
+            withAnimation(.easeOut(duration: 0.15)) {
+                isDeclarationAccepted.toggle()
+            }
+        } label: {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: isDeclarationAccepted ? "checkmark.square.fill" : "square")
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundStyle(isDeclarationAccepted ? Color.blue : Color(uiColor: .tertiaryLabel))
+                    .frame(width: 28, height: 28)
+                    .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Information is accurate")
+                        .font(.body)
+                        .foregroundStyle(.primary)
+
+                    Text("I confirm these documents belong to me and can be used for verification.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(.vertical, 4)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Information is accurate")
+        .accessibilityValue(isDeclarationAccepted ? "Checked" : "Unchecked")
+        .accessibilityAddTraits(.isButton)
+    }
+
     private var bottomSubmitArea: some View {
         VStack(spacing: 8) {
             Button {
@@ -247,8 +272,10 @@ struct KYCSubmissionSummaryView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        KYCSubmissionSummaryView()
+struct KYCSubmissionSummaryView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            KYCSubmissionSummaryView()
+        }
     }
 }

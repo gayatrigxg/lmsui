@@ -47,6 +47,8 @@ struct KYCVerificationFailedView: View {
     }
 }
 
-#Preview {
-    KYCVerificationFailedView()
+struct KYCVerificationFailedView_Previews: PreviewProvider {
+    static var previews: some View {
+        KYCVerificationFailedView()
+    }
 }
