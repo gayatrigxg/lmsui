@@ -16,7 +16,7 @@ class ReviewApplicationViewModel: ObservableObject {
 // MARK: - Main View
 struct ReviewApplicationView: View {
     @StateObject var viewModel = ReviewApplicationViewModel()
-    @EnvironmentObject var router: Router // Added Router here
+    @EnvironmentObject var router: Router
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -41,7 +41,6 @@ struct ReviewApplicationView: View {
                             ReviewDataRow(label: "Loan Amount", value: "₹\(viewModel.loanAmount.formatted(.number.grouping(.automatic)))")
                             ReviewDataRow(label: "Tenure", value: "\(viewModel.tenureMonths) Months")
                             
-                            // FIX: Replaced specifier with String(format:)
                             ReviewDataRow(label: "Interest Rate", value: String(format: "%.1f%% p.a.", viewModel.interestRate))
                             
                             Divider()
@@ -64,11 +63,15 @@ struct ReviewApplicationView: View {
                         }
                     }
                     
-                    // Consent Toggle
-                    HStack(alignment: .top, spacing: 12) {
-                        Toggle("", isOn: $viewModel.isConsentGiven)
-                            .labelsHidden()
-                            .tint(.mainBlue)
+                    // Custom Centered Consent UI
+                    HStack(alignment: .center, spacing: 12) {
+                        Button {
+                            viewModel.isConsentGiven.toggle()
+                        } label: {
+                            Image(systemName: viewModel.isConsentGiven ? "checkmark.square.fill" : "square")
+                                .font(.title2)
+                                .foregroundColor(viewModel.isConsentGiven ? .mainBlue : .secondary)
+                        }
                         
                         Text("I hereby declare that the information provided is true and correct. I authorize the platform to pull my credit report for assessment purposes.")
                             .font(.caption)
@@ -87,7 +90,7 @@ struct ReviewApplicationView: View {
             VStack {
                 Divider()
                 Button {
-                    router.push(.submitConfirmation) // Routing to Submit Confirmation
+                    router.push(.submitConfirmation)
                 } label: {
                     Text("Confirm & Submit")
                         .font(.headline)
@@ -165,5 +168,6 @@ struct ReviewDataRow: View {
 #Preview {
     NavigationStack {
         ReviewApplicationView()
+            .environmentObject(Router())
     }
 }

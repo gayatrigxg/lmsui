@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SubmitConfirmationView: View {
     let applicationID = "APP-9824-XT"
-    @EnvironmentObject var router: Router // Added Router here
+    @EnvironmentObject var router: Router
     
     var body: some View {
         VStack(spacing: 32) {
@@ -53,7 +53,7 @@ struct SubmitConfirmationView: View {
             // Actions
             VStack(spacing: 16) {
                 Button {
-                    router.push(.detailedTracking) // Routing to Tracking
+                    router.push(.detailedTracking)
                 } label: {
                     Text("Track Application Status")
                         .font(.headline)
@@ -65,15 +65,29 @@ struct SubmitConfirmationView: View {
                 }
                 
                 Button {
-                    router.popToRoot() // Pops all the way back to Home Dashboard
+                    router.push(.chatConversation(agentName: "Loan Officer"))
+                } label: {
+                    HStack {
+                        Image(systemName: "message.fill")
+                        Text("Talk to your Loan Officer")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.mainBlue)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Color.lightBlue)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+                
+                Button {
+                    router.popToRoot()
                 } label: {
                     Text("Back to Home")
                         .font(.headline)
                         .foregroundColor(.mainBlue)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color.lightBlue)
-                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .background(Color.clear)
                 }
             }
             .padding(.horizontal, 24)
@@ -86,4 +100,5 @@ struct SubmitConfirmationView: View {
 
 #Preview {
     SubmitConfirmationView()
+        .environmentObject(Router())
 }

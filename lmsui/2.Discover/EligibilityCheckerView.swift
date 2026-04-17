@@ -88,7 +88,8 @@ struct EligibilityCheckerView: View {
                 Divider()
                 Button {
                     if showResult {
-                        router.push(.startApplication)
+                        // FIX: Passed the 'loan' object into the route!
+                        router.push(.startApplication(loan))
                     } else {
                         withAnimation { showResult = true }
                     }

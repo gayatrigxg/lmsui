@@ -74,7 +74,7 @@ struct ContentView: View {
         case .costBreakdown: LoanCostBreakdownView()
         case .loanComparison(let product): LoanComparisonView(loan: product)
         case .eligibilityChecker(let product): EligibilityCheckerView(loan: product)
-        case .startApplication: LoanApplicationView()
+        case .startApplication(let product): LoanApplicationView(loan: product)
         case .documentUpload: DocumentUploadView()
         case .reviewApplication: ReviewApplicationView()
         case .submitConfirmation: SubmitConfirmationView()
@@ -105,10 +105,9 @@ struct ContentView: View {
         case .settings: SettingsView()
         case .languageSelection: LanguageSelectionView()
         case .accessibilitySettings: AccessibilitySettingsView()
-            
-        // NEW: Dashboard Utilities
         case .statementDownload: StatementDownloadView()
         case .notifications: NotificationsView()
+        case .autoPaySetup: AutoPaySetupView() // NEW: AutoPay Route
         }
     }
 }

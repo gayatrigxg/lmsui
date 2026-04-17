@@ -20,8 +20,9 @@ class LoanApplicationViewModel: ObservableObject {
 }
 
 struct LoanApplicationView: View {
+    let loan: LoanProduct
     @StateObject var viewModel = LoanApplicationViewModel()
-    @EnvironmentObject var router: Router // Added Router here
+    @EnvironmentObject var router: Router
     
     var body: some View {
         VStack(spacing: 0) {
@@ -122,7 +123,7 @@ struct LoanApplicationView: View {
                         Text("Estimated EMI")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        Text("₹\(viewModel.estimatedEMI.formatted(.number.grouping(.automatic)))")
+                        Text("₹\(viewModel.estimatedEMI.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                             .font(.title2).bold()
                             .foregroundColor(.primary)
                     }
@@ -130,7 +131,12 @@ struct LoanApplicationView: View {
                     Spacer()
                     
                     Button {
-                        router.push(.documentUpload) // Routing to Document Upload
+                        // Conditional Routing based on Loan Type
+                        if loan.title == "Personal Loan" {
+                            router.push(.documentUpload)
+                        } else {
+                            router.push(.submitConfirmation)
+                        }
                     } label: {
                         Text("Continue")
                             .font(.headline)
@@ -154,6 +160,7 @@ struct LoanApplicationView: View {
 
 #Preview {
     NavigationStack {
-        LoanApplicationView()
+        LoanApplicationView(loan: LoanProduct(title: "Personal Loan", icon: "person", maxAmount: 500000, interestRate: "10.5%", minTenure: 6, maxTenure: 60, tags: []))
+            .environmentObject(Router())
     }
 }

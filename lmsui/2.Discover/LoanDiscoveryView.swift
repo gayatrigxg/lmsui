@@ -217,7 +217,7 @@ struct LoanDetailScreen: View {
             VStack {
                 Divider()
                 Button {
-                    router.push(.startApplication) // Routing to Start Application
+                    router.push(.startApplication(loan)) // Pushes the selected loan type into the application
                 } label: {
                     Text("Apply Now")
                         .font(.headline)

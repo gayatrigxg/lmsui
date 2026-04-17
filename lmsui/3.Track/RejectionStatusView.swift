@@ -29,6 +29,7 @@ class RejectionStatusViewModel: ObservableObject {
 // MARK: - Main View
 struct RejectionStatusView: View {
     @StateObject var viewModel = RejectionStatusViewModel()
+    @EnvironmentObject var router: Router // 1. Added Router
     
     var body: some View {
         ScrollView {
@@ -84,7 +85,8 @@ struct RejectionStatusView: View {
                 
                 // Support Action
                 Button {
-                    // Contact Support Action
+                    // 2. Route to chat!
+                    router.push(.chatConversation(agentName: "Support Agent"))
                 } label: {
                     HStack {
                         Image(systemName: "headphones")
@@ -178,5 +180,6 @@ struct RejectionTimelineRow: View {
 #Preview {
     NavigationStack {
         RejectionStatusView()
+            .environmentObject(Router())
     }
 }

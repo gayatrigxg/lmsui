@@ -1,5 +1,5 @@
 import SwiftUI
-import Combine // 1. Added Combine import
+import Combine
 
 // MARK: - View Model
 class LoanCostViewModel: ObservableObject {
@@ -63,7 +63,6 @@ struct LoanCostBreakdownView: View {
                     BreakdownRow(title: "Principal Amount", amount: viewModel.principal, color: .mainBlue)
                     Divider().padding(.leading, 40)
                     
-                    // 2. Fixed String Interpolation using String(format:)
                     BreakdownRow(title: String(format: "Total Interest (%.1f%% p.a.)", viewModel.interestRate), amount: viewModel.totalInterest, color: .secondaryBlue)
                     Divider().padding(.leading, 40)
                     
@@ -76,7 +75,8 @@ struct LoanCostBreakdownView: View {
                         Text("Total Amount Payable")
                             .font(.headline)
                         Spacer()
-                        Text("₹\(viewModel.totalPayable.formatted(.number.grouping(.automatic)))")
+                        // 1. Appended .precision(.fractionLength(2))
+                        Text("₹\(viewModel.totalPayable.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                             .font(.title3).bold()
                             .foregroundColor(.primary)
                     }
@@ -97,7 +97,8 @@ struct LoanCostBreakdownView: View {
                         Text("Monthly EMI")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        Text("₹\(viewModel.emi.formatted(.number.grouping(.automatic)))")
+                        // Appended .precision(.fractionLength(2))
+                        Text("₹\(viewModel.emi.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                             .font(.title2).bold()
                             .foregroundColor(.mainBlue)
                     }
@@ -139,7 +140,8 @@ struct BreakdownRow: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             Spacer()
-            Text("₹\(amount.formatted(.number.grouping(.automatic)))")
+            // Appended .precision(.fractionLength(2))
+            Text("₹\(amount.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                 .font(.subheadline).bold()
                 .foregroundColor(.primary)
         }
@@ -157,7 +159,6 @@ struct DonutChartView: View {
     var body: some View {
         let principalFraction = principal / total
         let interestFraction = interest / total
-        // 3. Removed unused feesFraction
         
         ZStack {
             // Principal Arc
@@ -183,7 +184,8 @@ struct DonutChartView: View {
                 Text("Total")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                Text("₹\(total.formatted(.number.notation(.compactName)))")
+                // Appended .precision(.fractionLength(2))
+                Text("₹\(total.formatted(.number.notation(.compactName).precision(.fractionLength(2))))")
                     .font(.title2).bold()
                     .foregroundColor(.primary)
             }

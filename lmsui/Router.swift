@@ -10,7 +10,7 @@ enum AppRoute: Hashable {
     case eligibilityChecker(LoanProduct)
     
     // Application Flow
-    case startApplication
+    case startApplication(LoanProduct)
     case documentUpload
     case reviewApplication
     case submitConfirmation
@@ -32,6 +32,7 @@ enum AppRoute: Hashable {
     case overdueDetails
     case paymentCheckout(amount: Double)
     case paymentSuccess(transactionID: String)
+    case autoPaySetup // NEW: AutoPay Route
     
     // Feature 9: Smart Financial Tools
     case prepaymentCalculator

@@ -111,6 +111,23 @@ struct ActiveLoanDetailsView: View {
                 .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
                 .padding(.horizontal, 20)
                 
+                // Chat with Loan Officer Button
+                Button {
+                    router.push(.chatConversation(agentName: "Rajesh K."))
+                } label: {
+                    HStack {
+                        Image(systemName: "message.fill")
+                        Text("Chat with Loan Officer")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.mainBlue)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Color.lightBlue)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .padding(.horizontal, 20)
+                
             }
             .padding(.bottom, 40)
         }
@@ -156,7 +173,7 @@ struct SmartToolCardView: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 12) {
                 Image(systemName: icon)
                     .font(.title2)
                     .foregroundColor(.white)
@@ -165,9 +182,12 @@ struct SmartToolCardView: View {
                     .font(.subheadline).bold()
                     .foregroundColor(.white)
                     .multilineTextAlignment(.leading)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(width: 130, height: 110, alignment: .leading)
+            .frame(width: 140, alignment: .leading)
             .padding(16)
+            .frame(minHeight: 110)
             .background(bgColor)
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: bgColor.opacity(0.3), radius: 8, x: 0, y: 4)
