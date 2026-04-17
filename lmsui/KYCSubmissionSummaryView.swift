@@ -125,7 +125,7 @@ struct KYCSubmissionSummaryView: View {
         VStack(spacing: 6) {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(Color.blue)
+                .foregroundStyle(Color.mainBlue)
 
             Text(title)
                 .font(.caption2)
@@ -139,7 +139,7 @@ struct KYCSubmissionSummaryView: View {
 
     private var progressLine: some View {
         Rectangle()
-            .fill(Color.blue.opacity(0.35))
+            .fill(Color.mainBlue.opacity(0.35))
             .frame(height: 1)
             .frame(maxWidth: .infinity)
             .padding(.bottom, 20)
@@ -155,7 +155,7 @@ struct KYCSubmissionSummaryView: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 20, weight: .regular))
-                .foregroundStyle(Color.blue)
+                .foregroundStyle(Color.mainBlue)
                 .frame(width: 30)
 
             VStack(alignment: .leading, spacing: 3) {
@@ -167,14 +167,14 @@ struct KYCSubmissionSummaryView: View {
                     if isComplete {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption)
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Color.mainBlue)
                             .accessibilityLabel("Complete")
                     }
                 }
 
                 Text(value)
                     .font(.subheadline)
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Color.mainBlue)
 
                 Text(detail)
                     .font(.footnote)
@@ -191,7 +191,7 @@ struct KYCSubmissionSummaryView: View {
                 dismiss()
             }
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(Color.blue)
+            .foregroundStyle(Color.mainBlue)
         }
         .padding(.vertical, 6)
     }
@@ -205,7 +205,7 @@ struct KYCSubmissionSummaryView: View {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: isDeclarationAccepted ? "checkmark.square.fill" : "square")
                     .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(isDeclarationAccepted ? Color.blue : Color(uiColor: .tertiaryLabel))
+                    .foregroundStyle(isDeclarationAccepted ? Color.mainBlue : Color(uiColor: .tertiaryLabel))
                     .frame(width: 28, height: 28)
                     .accessibilityHidden(true)
 
@@ -252,7 +252,7 @@ struct KYCSubmissionSummaryView: View {
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.roundedRectangle(radius: 12))
-            .tint(Color.blue)
+            .tint(Color.mainBlue)
             .disabled(!canSubmit)
 
             if !canSubmit {

@@ -53,11 +53,11 @@ struct KYCVerificationSuccessView: View {
     private var successIcon: some View {
         ZStack {
             Circle()
-                .fill(Color.blue.opacity(0.12))
+                .fill(Color.lightBlue)
                 .frame(width: 92, height: 92)
 
             Circle()
-                .fill(Color.blue)
+                .fill(Color.mainBlue)
                 .frame(width: 58, height: 58)
 
             Image(systemName: "checkmark")
@@ -79,7 +79,7 @@ struct KYCVerificationSuccessView: View {
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.roundedRectangle(radius: 12))
-            .tint(Color.blue)
+            .tint(Color.mainBlue)
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)

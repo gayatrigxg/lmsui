@@ -1,17 +1,17 @@
 import SwiftUI
 
 struct CompleteProfileView: View {
-    @State private var goToIdentityScreen = false
+    @State private var goToProfileDetails = false
 
     var body: some View {
         VStack(spacing: 0) {
             Spacer(minLength: 0)
 
-            VStack(spacing: 32) {
+            VStack(spacing: 34) {
                 heroSection
-                documentsSection
+                detailsSection
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 30)
             .frame(maxWidth: .infinity)
 
             Spacer(minLength: 0)
@@ -20,82 +20,91 @@ struct CompleteProfileView: View {
         }
         .background(Color(uiColor: .systemBackground).ignoresSafeArea())
         .navigationBarHidden(true)
-        .navigationDestination(isPresented: $goToIdentityScreen) {
-            VerifyIdentityView()
+        .navigationDestination(isPresented: $goToProfileDetails) {
+            BorrowerPersonalDetailsView()
         }
     }
 
     private var heroSection: some View {
-        VStack(spacing: 18) {
-            Image(systemName: "checkmark.shield")
-                .font(.system(size: 34, weight: .semibold))
-                .foregroundStyle(.blue)
-                .frame(width: 72, height: 72)
-                .background(Color.blue.opacity(0.10))
-                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        VStack(spacing: 20) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Color.lightBlue)
+                    .frame(width: 70, height: 70)
+
+                Image(systemName: "person.crop.circle")
+                    .font(.system(size: 34, weight: .medium))
+                    .foregroundStyle(Color.mainBlue)
+            }
 
             VStack(spacing: 8) {
-                Text("Verify your identity")
-                    .font(.system(size: 24, weight: .bold))
+                Text("Complete your profile")
+                    .font(.system(size: 26, weight: .bold))
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.center)
 
-                Text("This usually takes about 3 minutes.")
+                Text("Add your basic details before we verify your documents.")
                     .font(.system(size: 17))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .frame(maxWidth: .infinity)
     }
 
-    private var documentsSection: some View {
+    private var detailsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("You’ll need")
+            Text("We’ll ask for")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 0) {
-                documentRow(
+                detailsRow(
                     icon: "person.text.rectangle",
-                    title: "Government ID",
-                    subtitle: "Aadhaar, PAN, or passport"
+                    title: "Personal details",
+                    subtitle: "Name, date of birth, and gender"
                 )
 
                 divider
 
-                documentRow(
+                detailsRow(
                     icon: "house",
-                    title: "Address proof",
-                    subtitle: "Utility bill or bank statement"
+                    title: "Current address",
+                    subtitle: "Address, city, state, and pincode"
                 )
 
                 divider
 
-                documentRow(
+                detailsRow(
                     icon: "indianrupeesign.circle",
-                    title: "Income proof",
-                    subtitle: "Salary slips or ITR"
+                    title: "Income details",
+                    subtitle: "Employment type and monthly income"
                 )
             }
             .background(Color(uiColor: .secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
     }
 
     private var divider: some View {
         Divider()
-            .padding(.leading, 60)
+            .padding(.leading, 64)
     }
 
-    private func documentRow(icon: String, title: String, subtitle: String) -> some View {
+    private func detailsRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 14) {
-            Image(systemName: icon)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(.blue)
-                .frame(width: 28)
+            ZStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.lightBlue)
+                    .frame(width: 36, height: 36)
 
-            VStack(alignment: .leading, spacing: 3) {
+                Image(systemName: icon)
+                    .font(.system(size: 17, weight: .medium))
+                    .foregroundStyle(Color.mainBlue)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.primary)
@@ -103,18 +112,20 @@ struct CompleteProfileView: View {
                 Text(subtitle)
                     .font(.system(size: 15))
                     .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
-            Spacer()
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 16)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
     }
 
     private var bottomBar: some View {
         VStack(spacing: 10) {
             Button {
-                goToIdentityScreen = true
+                goToProfileDetails = true
             } label: {
                 Text("Continue")
                     .font(.system(size: 17, weight: .semibold))
@@ -123,7 +134,7 @@ struct CompleteProfileView: View {
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.roundedRectangle(radius: 16))
-            .tint(.blue)
+            .tint(Color.mainBlue)
 
             Button("Not now") {
             }

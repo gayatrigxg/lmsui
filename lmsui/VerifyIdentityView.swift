@@ -95,9 +95,9 @@ struct VerifyIdentityView: View {
             HStack(spacing: 14) {
                 Image(systemName: document.icon)
                     .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.mainBlue)
                     .frame(width: 34, height: 34)
-                    .background(Color.blue.opacity(0.10))
+                    .background(Color.lightBlue)
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -114,7 +114,7 @@ struct VerifyIdentityView: View {
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundStyle(isSelected ? .blue : Color(uiColor: .tertiaryLabel))
+                    .foregroundStyle(isSelected ? Color.mainBlue : Color(uiColor: .tertiaryLabel))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -162,12 +162,12 @@ struct VerifyIdentityView: View {
             VStack(spacing: 10) {
                 ZStack {
                     Circle()
-                        .fill(isSelected ? Color.blue : Color.blue.opacity(0.10))
+                        .fill(isSelected ? Color.mainBlue : Color.lightBlue)
                         .frame(width: 52, height: 52)
 
                     Image(systemName: action.icon)
                         .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(isSelected ? .white : .blue)
+                        .foregroundStyle(isSelected ? .white : Color.mainBlue)
                 }
 
                 VStack(spacing: 2) {
@@ -179,7 +179,7 @@ struct VerifyIdentityView: View {
                     if action == .digiLocker {
                         Text("Recommended")
                             .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.mainBlue)
                     }
                 }
             }
@@ -188,7 +188,7 @@ struct VerifyIdentityView: View {
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .stroke(isSelected ? Color.blue.opacity(0.35) : Color.clear, lineWidth: 1.5)
+                    .stroke(isSelected ? Color.mainBlue.opacity(0.35) : Color.clear, lineWidth: 1.5)
             )
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
@@ -203,12 +203,12 @@ struct VerifyIdentityView: View {
 
             HStack(spacing: 14) {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.blue.opacity(0.10))
+                    .fill(Color.lightBlue)
                     .frame(width: 64, height: 80)
                     .overlay {
                         Image(systemName: previewIcon)
                             .font(.system(size: 24, weight: .medium))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.mainBlue)
                     }
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -222,7 +222,7 @@ struct VerifyIdentityView: View {
 
                     Label("Ready to continue", systemImage: "checkmark.circle.fill")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.mainBlue)
                 }
 
                 Spacer()
@@ -244,7 +244,7 @@ struct VerifyIdentityView: View {
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.roundedRectangle(radius: 16))
             .controlSize(.large)
-            .tint(.blue)
+            .tint(Color.mainBlue)
 
             Text("Your selected document is ready")
                 .font(.system(size: 13))

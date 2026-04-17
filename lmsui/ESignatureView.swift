@@ -134,7 +134,7 @@ struct ESignatureView: View {
         VStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.system(size: 30, weight: .medium))
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.mainBlue)
 
             Text(title)
                 .font(.headline)
@@ -162,7 +162,7 @@ struct ESignatureView: View {
                     showSignatureRequired = false
                 }
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.mainBlue)
             }
 
             SignaturePadView(signatureImage: $signatureImage)
@@ -195,7 +195,7 @@ struct ESignatureView: View {
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.roundedRectangle(radius: 16))
             .controlSize(.large)
-            .tint(.blue)
+            .tint(Color.mainBlue)
 
             Text("Your signature will be attached to this application.")
                 .font(.system(size: 13))

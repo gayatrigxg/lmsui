@@ -13,7 +13,7 @@ struct KYCVerifyingView: View {
             VStack(spacing: 24) {
                 ProgressView()
                     .progressViewStyle(.circular)
-                    .tint(Color.blue)
+                    .tint(Color.mainBlue)
                     .scaleEffect(1.25)
                     .frame(width: 64, height: 64)
                     .accessibilityLabel("Verification in progress")
@@ -32,7 +32,7 @@ struct KYCVerifyingView: View {
 
                     Text("Your documents are securely encrypted")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Color.mainBlue)
                         .multilineTextAlignment(.center)
                 }
             }

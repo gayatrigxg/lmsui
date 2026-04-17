@@ -98,9 +98,9 @@ struct AddressProofView: View {
             HStack(spacing: 14) {
                 Image(systemName: type.icon)
                     .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.mainBlue)
                     .frame(width: 36, height: 36)
-                    .background(Color.blue.opacity(0.10))
+                    .background(Color.lightBlue)
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -117,7 +117,7 @@ struct AddressProofView: View {
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundStyle(isSelected ? .blue : Color(uiColor: .tertiaryLabel))
+                    .foregroundStyle(isSelected ? Color.mainBlue : Color(uiColor: .tertiaryLabel))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -130,9 +130,9 @@ struct AddressProofView: View {
         HStack(spacing: 12) {
             Image(systemName: document.icon)
                 .font(.system(size: 16, weight: .medium))
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.mainBlue)
                 .frame(width: 34, height: 34)
-                .background(Color.blue.opacity(0.10))
+                .background(Color.lightBlue)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
             VStack(alignment: .leading, spacing: 2) {
@@ -181,12 +181,12 @@ struct AddressProofView: View {
             VStack(spacing: 10) {
                 ZStack {
                     Circle()
-                        .fill(isSelected ? Color.blue : Color.blue.opacity(0.10))
+                        .fill(isSelected ? Color.mainBlue : Color.lightBlue)
                         .frame(width: 54, height: 54)
 
                     Image(systemName: action.icon)
                         .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(isSelected ? .white : .blue)
+                        .foregroundStyle(isSelected ? .white : Color.mainBlue)
                 }
 
                 VStack(spacing: 2) {
@@ -198,7 +198,7 @@ struct AddressProofView: View {
                     if action == .digiLocker {
                         Text("Recommended")
                             .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.mainBlue)
                     }
                 }
             }
@@ -207,7 +207,7 @@ struct AddressProofView: View {
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .stroke(isSelected ? Color.blue.opacity(0.35) : Color.clear, lineWidth: 1.5)
+                    .stroke(isSelected ? Color.mainBlue.opacity(0.35) : Color.clear, lineWidth: 1.5)
             )
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
@@ -222,12 +222,12 @@ struct AddressProofView: View {
 
             HStack(spacing: 14) {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.blue.opacity(0.10))
+                    .fill(Color.lightBlue)
                     .frame(width: 64, height: 82)
                     .overlay {
                         Image(systemName: previewIcon)
                             .font(.system(size: 24, weight: .medium))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.mainBlue)
                     }
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -241,7 +241,7 @@ struct AddressProofView: View {
 
                     Label("Ready to continue", systemImage: "checkmark.circle.fill")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.mainBlue)
                 }
 
                 Spacer()
@@ -263,7 +263,7 @@ struct AddressProofView: View {
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.roundedRectangle(radius: 16))
             .controlSize(.large)
-            .tint(.blue)
+            .tint(Color.mainBlue)
 
             Text("You can change this before submitting")
                 .font(.system(size: 13))
