@@ -9,10 +9,10 @@ struct StatementDocument: Identifiable {
 
 struct StatementDownloadView: View {
     let statements: [StatementDocument] = [
-        StatementDocument(month: "March", year: "2026", fileSize: "1.2 MB"),
-        StatementDocument(month: "February", year: "2026", fileSize: "1.1 MB"),
-        StatementDocument(month: "January", year: "2026", fileSize: "1.3 MB"),
-        StatementDocument(month: "December", year: "2025", fileSize: "1.2 MB")
+            StatementDocument(month: String(localized: "March"), year: "2026", fileSize: "1.2 MB"),
+            StatementDocument(month: String(localized: "February"), year: "2026", fileSize: "1.1 MB"),
+            StatementDocument(month: String(localized: "January"), year: "2026", fileSize: "1.3 MB"),
+            StatementDocument(month: String(localized: "December"), year: "2025", fileSize: "1.2 MB")
     ]
     
     @State private var showDownloadAlert = false

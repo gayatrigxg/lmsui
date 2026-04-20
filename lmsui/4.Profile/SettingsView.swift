@@ -1,4 +1,16 @@
 import SwiftUI
+import Combine
+
+// MARK: - Language Manager (Core Logic for User Story 6)
+class LanguageManager: ObservableObject {
+    // Saves the selected language to device memory
+    @AppStorage("app_language") var selectedLanguage: String = "en"
+    
+    // Helper to get the Locale object
+    var currentLocale: Locale {
+        Locale(identifier: selectedLanguage)
+    }
+}
 
 // MARK: - Main Settings View
 struct SettingsView: View {
@@ -49,19 +61,27 @@ struct SettingsView: View {
 
 // MARK: - Language Selection View
 struct LanguageSelectionView: View {
-    @State private var selectedLanguage = "English"
-    let languages = ["English", "Hindi (हिन्दी)", "Marathi (मराठी)", "Tamil (தமிழ்)", "Telugu (தமிழ்)"]
+    @EnvironmentObject var langManager: LanguageManager // Injected Manager
+    @Environment(\.presentationMode) var presentationMode
+    
+    let languages = [
+        ("en", "English"),
+        ("hi", "Hindi (हिन्दी)"),
+        ("mr", "Marathi (मराठी)")
+    ]
     
     var body: some View {
         List {
-            ForEach(languages, id: \.self) { lang in
+            ForEach(languages, id: \.0) { langCode, langName in
                 Button {
-                    selectedLanguage = lang
+                    // Update the global language state
+                    langManager.selectedLanguage = langCode
+                    presentationMode.wrappedValue.dismiss() // Auto close on select
                 } label: {
                     HStack {
-                        Text(lang).foregroundColor(.primary)
+                        Text(langName).foregroundColor(.primary)
                         Spacer()
-                        if selectedLanguage == lang {
+                        if langManager.selectedLanguage == langCode {
                             Image(systemName: "checkmark").foregroundColor(.mainBlue)
                         }
                     }

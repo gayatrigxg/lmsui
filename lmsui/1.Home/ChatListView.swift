@@ -14,9 +14,9 @@ struct ChatListView: View {
     @EnvironmentObject var router: Router
     
     let chats: [ChatPreviewModel] = [
-        ChatPreviewModel(agentName: "Rajesh K.", topic: "Document Verification", lastMessage: "Yes, the PAN card upload is confirmed. We will...", time: "10:42 AM", hasUnread: true, isClosed: false),
-        ChatPreviewModel(agentName: "Support Bot", topic: "General Inquiry", lastMessage: "Your EMI has been successfully received.", time: "Yesterday", hasUnread: false, isClosed: false),
-        ChatPreviewModel(agentName: "Priya S.", topic: "Prepayment Query", lastMessage: "You can close this ticket if you have no further questions.", time: "12 Apr", hasUnread: false, isClosed: true)
+            ChatPreviewModel(agentName: "Rajesh K.", topic: String(localized: "Document Verification"), lastMessage: String(localized: "Yes, the PAN card upload is confirmed. We will..."), time: "10:42 AM", hasUnread: true, isClosed: false),
+            ChatPreviewModel(agentName: "Support Bot", topic: String(localized: "General Inquiry"), lastMessage: String(localized: "Your EMI has been successfully received."), time: String(localized: "Yesterday"), hasUnread: false, isClosed: false),
+            ChatPreviewModel(agentName: "Priya S.", topic: String(localized: "Prepayment Query"), lastMessage: String(localized: "You can close this ticket if you have no further questions."), time: "12 Apr", hasUnread: false, isClosed: true)
     ]
     
     var body: some View {

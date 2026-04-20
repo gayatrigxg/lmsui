@@ -20,9 +20,9 @@ class RejectionStatusViewModel: ObservableObject {
     @Published var loanID = "APP-4011-RX"
     
     @Published var steps: [RejectionTimelineStep] = [
-        RejectionTimelineStep(title: "Application Submitted", description: "Documents received.", status: .completed),
-        RejectionTimelineStep(title: "Credit Assessment", description: "Application halted during credit review.", status: .rejected),
-        RejectionTimelineStep(title: "Loan Approval", description: "Pending approval.", status: .pending)
+            RejectionTimelineStep(title: String(localized: "Application Submitted"), description: String(localized: "Documents received."), status: .completed),
+            RejectionTimelineStep(title: String(localized: "Credit Assessment"), description: String(localized: "Application halted during credit review."), status: .rejected),
+            RejectionTimelineStep(title: String(localized: "Loan Approval"), description: String(localized: "Pending approval."), status: .pending)
     ]
 }
 

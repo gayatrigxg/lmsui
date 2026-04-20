@@ -8,7 +8,12 @@ class ReviewApplicationViewModel: ObservableObject {
     @Published var estimatedEMI: Double = 6961
     @Published var interestRate: Double = 10.5
     
-    @Published var documents: [String] = ["PAN Card", "Aadhaar Card", "Bank Statement", "Salary Slip"]
+    @Published var documents: [String] = [
+            String(localized: "PAN Card"),
+            String(localized: "Aadhaar Card"),
+            String(localized: "Bank Statement"),
+            String(localized: "Salary Slip")
+    ]
     
     @Published var isConsentGiven = false
 }
@@ -23,17 +28,18 @@ struct ReviewApplicationView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     
-                    // Header
-                    VStack(spacing: 8) {
+                    // Header (Updated to match AutoPay)
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Review Details")
                             .font(.largeTitle).bold()
+                            .foregroundColor(.primary)
                         Text("Please verify your information before final submission.")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
                     }
-                    .padding(.top, 20)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
+                    .padding(.top, 10)
                     
                     // Loan Summary Card
                     ReviewSectionCard(title: "Loan Details", actionTitle: "Edit") {

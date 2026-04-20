@@ -6,6 +6,20 @@ struct RepaymentsListView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            
+            // Header (Added to match AutoPay)
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Repayments")
+                    .font(.largeTitle).bold()
+                    .foregroundColor(.primary)
+                Text("View your past and upcoming EMIs.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
+            
             // Custom Segmented Picker
             HStack(spacing: 0) {
                 SegmentButton(title: "Upcoming", isSelected: selectedTab == 0) { selectedTab = 0 }
@@ -27,8 +41,9 @@ struct RepaymentsListView: View {
                         EMIListItem(month: "Aug", date: "20 Aug 2026", amount: 14200, status: .upcoming)
                     } else {
                         // History List
-                        EMIListItem(month: "Mar", date: "18 Mar 2026", amount: 14200, status: .paid)
-                        EMIListItem(month: "Feb", date: "19 Feb 2026", amount: 14200, status: .paid)
+                        EMIListItem(month: "Apr", date: "20 Apr 2026", amount: 14200, status: .paid)
+                        EMIListItem(month: "Mar", date: "20 Mar 2026", amount: 14200, status: .paid)
+                        EMIListItem(month: "Feb", date: "20 Feb 2026", amount: 14200, status: .paid)
                         EMIListItem(month: "Jan", date: "20 Jan 2026", amount: 14200, status: .paid)
                     }
                 }
@@ -37,12 +52,13 @@ struct RepaymentsListView: View {
             }
         }
         .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
-        .navigationTitle("Transactions")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-enum EMIStatus { case upcoming, paid, overdue }
+enum EMIStatus {
+    case paid, upcoming
+}
 
 struct EMIListItem: View {
     let month: String
@@ -52,20 +68,33 @@ struct EMIListItem: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            // Month Icon
-            VStack {
-                Text(month.uppercased())
+            
+            // Calendar Icon
+            VStack(spacing: 2) {
+                Text(month)
                     .font(.caption2).bold()
-                    .foregroundColor(status == .paid ? .white : .mainBlue)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
+                    .background(status == .paid ? Color(hex: "#00C48C") : Color.secondaryBlue)
+                
+                Text(date.components(separatedBy: " ").first ?? "")
+                    .font(.title3).bold()
+                    .foregroundColor(.primary)
+                    .padding(.vertical, 6)
             }
-            .frame(width: 48, height: 48)
-            .background(status == .paid ? Color(hex: "#00C48C") : Color.lightBlue)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .frame(width: 50)
+            .background(Color.lightBlue.opacity(0.3))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(status == .paid ? Color(hex: "#00C48C").opacity(0.3) : Color.secondaryBlue.opacity(0.3), lineWidth: 1)
+            )
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(date)
+                Text("Personal Loan")
                     .font(.headline)
-                Text(status == .paid ? "Payment Successful" : "Scheduled EMI")
+                Text(date)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -106,7 +135,7 @@ struct SegmentButton: View {
                 .padding(.vertical, 10)
                 .background(isSelected ? Color.white : Color.clear)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(color: isSelected ? .black.opacity(0.05) : .clear, radius: 4, x: 0, y: 2)
+                .shadow(color: isSelected ? .black.opacity(0.05) : .clear, radius: 2, x: 0, y: 1)
         }
     }
 }

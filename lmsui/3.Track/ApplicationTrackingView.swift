@@ -22,11 +22,11 @@ class ApplicationTrackingViewModel: ObservableObject {
     @Published var amount = 150000.0
     
     @Published var steps: [TimelineStepItem] = [
-        TimelineStepItem(title: "Application Submitted", date: "14 Apr, 10:30 AM", description: "Your application and documents have been received.", status: .completed),
-        TimelineStepItem(title: "Document Verification", date: "14 Apr, 02:15 PM", description: "Our team has successfully verified your identity and income.", status: .completed),
-        TimelineStepItem(title: "Credit Assessment", date: "In Progress", description: "We are currently evaluating your credit profile.", status: .current),
-        TimelineStepItem(title: "Loan Approval", date: nil, description: "Final approval pending from the underwriting team.", status: .pending),
-        TimelineStepItem(title: "Amount Disbursed", date: nil, description: "Funds will be transferred to your registered bank account.", status: .pending)
+        TimelineStepItem(title: String(localized: "Application Submitted"), date: String(localized: "14 Apr, 10:30 AM"), description: String(localized: "Your application and documents have been received."), status: .completed),
+        TimelineStepItem(title: String(localized: "Document Verification"), date: String(localized: "14 Apr, 02:15 PM"), description: String(localized: "Our team has successfully verified your identity and income."), status: .completed),
+        TimelineStepItem(title: String(localized: "Credit Assessment"), date: String(localized: "In Progress"), description: String(localized: "We are currently evaluating your credit profile."), status: .current),
+        TimelineStepItem(title: String(localized: "Loan Approval"), date: nil, description: String(localized: "Final approval pending from the underwriting team."), status: .pending),
+        TimelineStepItem(title: String(localized: "Amount Disbursed"), date: nil, description: String(localized: "Funds will be transferred to your registered bank account."), status: .pending)
     ]
 }
 
@@ -163,14 +163,6 @@ struct TimelineRow: View {
         switch step.status {
         case .completed: return Color(hex: "#00C48C")
         case .current, .pending: return Color.gray.opacity(0.2)
-        }
-    }
-}
-
-struct ApplicationTrackingView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            ApplicationTrackingView()
         }
     }
 }

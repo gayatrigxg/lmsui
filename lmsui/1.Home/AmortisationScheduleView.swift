@@ -66,22 +66,23 @@ struct AmortisationScheduleView: View {
             VStack(spacing: 24) {
 
                 // Header
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Amortisation Schedule")
-                        .font(.title2).bold()
+                        .font(.largeTitle).bold()
+                        .foregroundColor(.primary)
                     Text("18 monthly payments ending Oct 2027")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 20)
-                .padding(.top, 20)
+                .padding(.top, 10)
 
                 // Summary strip
                 HStack(spacing: 0) {
-                    SummaryPill(label: "Total Principal", value: "₹\(viewModel.totalPrincipal.formatted(.number.notation(.compactName)))", color: .mainBlue)
+                    SummaryPill(label: "Total Principal", value: "₹\(viewModel.totalPrincipal.formatted(.number.notation(.compactName).precision(.fractionLength(2))))", color: .mainBlue)
                     Divider().frame(height: 40)
-                    SummaryPill(label: "Total Interest", value: "₹\(viewModel.totalInterest.formatted(.number.notation(.compactName)))", color: .alertRed)
+                    SummaryPill(label: "Total Interest", value: "₹\(viewModel.totalInterest.formatted(.number.notation(.compactName).precision(.fractionLength(2))))", color: .alertRed)
                     Divider().frame(height: 40)
                     SummaryPill(label: "EMI", value: "₹14,200", color: Color(hex: "#00C48C"))
                 }
@@ -141,7 +142,7 @@ struct AmortisationScheduleView: View {
                         AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { value in
                             AxisValueLabel {
                                 if let v = value.as(Double.self) {
-                                    Text("₹\(v.formatted(.number.notation(.compactName)))")
+                                    Text("₹\(v.formatted(.number.notation(.compactName).precision(.fractionLength(2))))")
                                         .font(.caption2)
                                 }
                             }
@@ -302,7 +303,7 @@ struct SelectedMonthCard: View {
                         Text("Principal")
                             .font(.caption).foregroundColor(.secondary)
                     }
-                    Text("₹\(month.principalPaid.formatted(.number.grouping(.automatic)))")
+                    Text("₹\(month.principalPaid.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                         .font(.subheadline).bold().foregroundColor(.mainBlue)
                 }
                 Spacer()
@@ -319,7 +320,7 @@ struct SelectedMonthCard: View {
                             .font(.caption).foregroundColor(.secondary)
                         Circle().fill(Color.alertRed.opacity(0.7)).frame(width: 8, height: 8)
                     }
-                    Text("₹\(month.interestPaid.formatted(.number.grouping(.automatic)))")
+                    Text("₹\(month.interestPaid.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                         .font(.subheadline).bold().foregroundColor(.alertRed)
                 }
             }
@@ -330,7 +331,7 @@ struct SelectedMonthCard: View {
                 Text("Remaining Balance")
                     .font(.subheadline).foregroundColor(.secondary)
                 Spacer()
-                Text("₹\(month.balance.formatted(.number.grouping(.automatic)))")
+                Text("₹\(month.balance.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                     .font(.subheadline).bold()
             }
         }

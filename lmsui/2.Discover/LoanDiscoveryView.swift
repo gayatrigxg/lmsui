@@ -16,14 +16,14 @@ struct LoanProduct: Identifiable, Hashable {
 // MARK: - View Model
 class LoanMarketplaceViewModel: ObservableObject {
     @Published var availableLoans: [LoanProduct] = [
-        LoanProduct(title: "Personal Loan", icon: "person.text.rectangle", maxAmount: 500000, interestRate: "10.5%", minTenure: 6, maxTenure: 60, tags: ["Instant Approval", "No Collateral"]),
-        LoanProduct(title: "Home Renovation", icon: "house.and.flag", maxAmount: 1500000, interestRate: "8.5%", minTenure: 12, maxTenure: 120, tags: ["Low Interest", "Tax Benefits"]),
-        LoanProduct(title: "Education Loan", icon: "graduationcap", maxAmount: 2000000, interestRate: "9.0%", minTenure: 12, maxTenure: 84, tags: ["Flexible Repayment"]),
-        LoanProduct(title: "Auto Loan", icon: "car", maxAmount: 1000000, interestRate: "9.5%", minTenure: 12, maxTenure: 60, tags: ["Quick Disbursal"])
+        LoanProduct(title: String(localized: "Personal Loan"), icon: "person.text.rectangle", maxAmount: 500000, interestRate: "10.5%", minTenure: 6, maxTenure: 60, tags: [String(localized: "Instant Approval"), String(localized: "No Collateral")]),
+        LoanProduct(title: String(localized: "Home Renovation"), icon: "house.and.flag", maxAmount: 1500000, interestRate: "8.5%", minTenure: 12, maxTenure: 120, tags: [String(localized: "Low Interest"), String(localized: "Tax Benefits")]),
+        LoanProduct(title: String(localized: "Education Loan"), icon: "graduationcap", maxAmount: 2000000, interestRate: "9.0%", minTenure: 12, maxTenure: 84, tags: [String(localized: "Flexible Repayment")]),
+        LoanProduct(title: String(localized: "Auto Loan"), icon: "car", maxAmount: 1000000, interestRate: "9.5%", minTenure: 12, maxTenure: 60, tags: [String(localized: "Quick Disbursal")])
     ]
 }
 
-// MARK: - Marketplace Screen (Feature 4.1)
+// MARK: - Marketplace Screen
 struct LoanMarketplaceView: View {
     @StateObject var viewModel = LoanMarketplaceViewModel()
     @EnvironmentObject var router: Router
@@ -133,7 +133,7 @@ struct LoanProductCard: View {
     }
 }
 
-// MARK: - Loan Detail Screen (Feature 4.2 & 4.4)
+// MARK: - Loan Detail Screen
 struct LoanDetailScreen: View {
     let loan: LoanProduct
     @EnvironmentObject var router: Router
@@ -158,8 +158,8 @@ struct LoanDetailScreen: View {
                             .font(.title).bold()
                         
                         HStack(spacing: 24) {
-                            DetailHighlight(title: "Max Amount", value: "₹\(loan.maxAmount.formatted(.number.grouping(.automatic)))")
-                            DetailHighlight(title: "Interest", value: "From \(loan.interestRate)")
+                            DetailHighlight(title: String(localized: "Max Amount"), value: "₹\(loan.maxAmount.formatted(.number.grouping(.automatic)))")
+                            DetailHighlight(title: String(localized: "Interest"), value: "\(String(localized: "From")) \(loan.interestRate)")
                         }
                     }
                     .padding(.top, 20)
@@ -203,9 +203,9 @@ struct LoanDetailScreen: View {
                         Text("Features & Benefits")
                             .font(.headline)
                         
-                        FeatureRow(icon: "clock.fill", title: "Quick Disbursal", subtitle: "Money in your account within 24 hours of approval.")
-                        FeatureRow(icon: "doc.text.fill", title: "Minimal Documentation", subtitle: "100% paperless process.")
-                        FeatureRow(icon: "percent", title: "Flexible Repayment", subtitle: "Choose an EMI that fits your budget.")
+                        FeatureRow(icon: "clock.fill", title: String(localized: "Quick Disbursal"), subtitle: String(localized: "Money in your account within 24 hours of approval."))
+                        FeatureRow(icon: "doc.text.fill", title: String(localized: "Minimal Documentation"), subtitle: String(localized: "100% paperless process."))
+                        FeatureRow(icon: "percent", title: String(localized: "Flexible Repayment"), subtitle: String(localized: "Choose an EMI that fits your budget."))
                     }
                     .padding(.horizontal, 20)
                     
@@ -274,11 +274,5 @@ struct FeatureRow: View {
                     .foregroundColor(.secondary)
             }
         }
-    }
-}
-
-struct LoanDiscoveryView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

@@ -366,14 +366,14 @@ struct QuickActionItemView: View {
 
     var body: some View {
         Button {
-            if action.label == "AutoPay" { router.push(.autoPaySetup) }
-            else if action.label == "Pay EMI" { router.push(.repaymentDashboard) }
-            else if action.label == "History" { router.push(.repaymentsList(initialTab: 1)) }
-            else if action.label == "Support" { router.push(.chatList) }
-            else if action.label == "Schedule" { router.push(.amortisationSchedule) }
-            else if action.label == "Foreclose" { router.push(.outstandingBalance) }
-            else if action.label == "Statement" { router.push(.statementDownload) }
-            else if action.label == "Analytics" { router.push(.costBreakdown) }
+            if action.label == String(localized: "AutoPay") { router.push(.autoPaySetup) }
+            else if action.label == String(localized: "Pay EMI") { router.push(.repaymentDashboard) }
+            else if action.label == String(localized: "History") { router.push(.repaymentsList(initialTab: 1)) }
+            else if action.label == String(localized: "Support") { router.push(.chatList) }
+            else if action.label == String(localized: "Schedule") { router.push(.amortisationSchedule) }
+            else if action.label == String(localized: "Foreclose") { router.push(.outstandingBalance) }
+            else if action.label == String(localized: "Statement") { router.push(.statementDownload) }
+            else if action.label == String(localized: "Analytics") { router.push(.costBreakdown) }
         } label: {
             VStack(spacing: 10) {
                 RoundedRectangle(cornerRadius: 16).fill(Color.lightBlue).frame(width: 64, height: 64)
@@ -393,7 +393,7 @@ struct CredibilityScoreCardView: View {
         switch score { case 750...: return Color(hex: "#00C48C"); case 600..<750: return Color.secondaryBlue; default: return Color.alertRed }
     }
     private var scoreLabel: String {
-        switch score { case 750...: return "Excellent"; case 650..<750: return "Good"; case 500..<650: return "Fair"; default: return "Poor" }
+        switch score { case 750...: return String(localized: "Excellent"); case 650..<750: return String(localized: "Good"); case 500..<650: return String(localized: "Fair"); default: return String(localized: "Poor") }
     }
     var body: some View {
         VStack(spacing: 20) {
@@ -473,33 +473,23 @@ struct QuickAction: Identifiable { let id = UUID(); let icon: String; let label:
 class HomeDashboardViewModel: ObservableObject {
     let userName = "Akshita Panda"
     
+    // Localization added to arrays
     let activeLoans: [LoanSummary] = [
-        LoanSummary(id: "1", title: "Personal Loan", totalAmount: 500000, outstandingBalance: 312000, remainingEMIs: 18),
-        LoanSummary(id: "2", title: "Auto Loan", totalAmount: 850000, outstandingBalance: 720000, remainingEMIs: 48)
+        LoanSummary(id: "1", title: String(localized: "Personal Loan"), totalAmount: 500000, outstandingBalance: 312000, remainingEMIs: 18),
+        LoanSummary(id: "2", title: String(localized: "Auto Loan"), totalAmount: 850000, outstandingBalance: 720000, remainingEMIs: 48)
     ]
     
-    let nextEMI = NextEMIInfo(amount: 14200, dueDate: "20 Apr 2026", daysLeft: "6 days left", isUrgent: true)
+    let nextEMI = NextEMIInfo(amount: 14200, dueDate: String(localized: "20 Apr 2026"), daysLeft: String(localized: "6 days left"), isUrgent: true)
     let credibilityScore = 724
     
     let quickActions: [QuickAction] = [
-        QuickAction(icon: "arrow.triangle.2.circlepath", label: "AutoPay"),
-        QuickAction(icon: "indianrupeesign.circle.fill", label: "Pay EMI"),
-        QuickAction(icon: "clock.arrow.circlepath", label: "History"),
-        QuickAction(icon: "headset", label: "Support"),
-        QuickAction(icon: "calendar", label: "Schedule"),
-        QuickAction(icon: "arrow.left.arrow.right", label: "Foreclose"),
-        QuickAction(icon: "doc.plaintext.fill", label: "Statement"),
-        QuickAction(icon: "chart.bar.fill", label: "Analytics")
+        QuickAction(icon: "arrow.triangle.2.circlepath", label: String(localized: "AutoPay")),
+        QuickAction(icon: "indianrupeesign.circle.fill", label: String(localized: "Pay EMI")),
+        QuickAction(icon: "clock.arrow.circlepath", label: String(localized: "History")),
+        QuickAction(icon: "headset", label: String(localized: "Support")),
+        QuickAction(icon: "calendar", label: String(localized: "Schedule")),
+        QuickAction(icon: "arrow.left.arrow.right", label: String(localized: "Foreclose")),
+        QuickAction(icon: "doc.plaintext.fill", label: String(localized: "Statement")),
+        QuickAction(icon: "chart.bar.fill", label: String(localized: "Analytics"))
     ]
-}
-
-struct HomeDashboardView_Previews: PreviewProvider {
-    static var previews: some View {
-        TabView {
-            HomeDashboardView()
-                .environmentObject(Router())
-                .tabItem { Image(systemName: "house.fill"); Text("Home") }
-        }
-        .accentColor(Color.mainBlue)
-    }
 }

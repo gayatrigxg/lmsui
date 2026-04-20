@@ -19,11 +19,12 @@ struct DocumentItem: Identifiable {
 // MARK: - View Model
 class DocumentUploadViewModel: ObservableObject {
     @Published var documents: [DocumentItem] = [
-        DocumentItem(title: "PAN Card", subtitle: "Front side of your PAN", icon: "person.text.rectangle"),
-        DocumentItem(title: "Aadhaar Card", subtitle: "Front & Back combined PDF/Image", icon: "building.columns.fill"),
-        DocumentItem(title: "Bank Statement", subtitle: "Last 6 months (PDF)", icon: "doc.text.fill"),
-        DocumentItem(title: "Salary Slip", subtitle: "Most recent month", icon: "dollarsign.square.fill")
+        DocumentItem(title: String(localized: "PAN Card"), subtitle: String(localized: "Front side of your PAN"), icon: "person.text.rectangle"),
+        DocumentItem(title: String(localized: "Aadhaar Card"), subtitle: String(localized: "Front & Back combined PDF/Image"), icon: "building.columns.fill"),
+        DocumentItem(title: String(localized: "Bank Statement"), subtitle: String(localized: "Last 6 months (PDF)"), icon: "doc.text.fill"),
+        DocumentItem(title: String(localized: "Salary Slip"), subtitle: String(localized: "Most recent month"), icon: "dollarsign.square.fill")
     ]
+    
     
     var allDocumentsUploaded: Bool {
         documents.allSatisfy { $0.state == .completed }

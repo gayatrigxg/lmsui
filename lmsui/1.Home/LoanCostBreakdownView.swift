@@ -38,15 +38,18 @@ struct LoanCostBreakdownView: View {
         ScrollView {
             VStack(spacing: 24) {
                 
-                // Header
-                VStack(spacing: 8) {
+                // Header (Updated to match AutoPay)
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Cost Breakdown")
-                        .font(.title2).bold()
+                        .font(.largeTitle).bold()
+                        .foregroundColor(.primary)
                     Text("Complete transparency on what you pay")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                .padding(.top, 20)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
                 
                 // Donut Chart
                 DonutChartView(
@@ -75,7 +78,6 @@ struct LoanCostBreakdownView: View {
                         Text("Total Amount Payable")
                             .font(.headline)
                         Spacer()
-                        // 1. Appended .precision(.fractionLength(2))
                         Text("₹\(viewModel.totalPayable.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                             .font(.title3).bold()
                             .foregroundColor(.primary)
@@ -97,7 +99,6 @@ struct LoanCostBreakdownView: View {
                         Text("Monthly EMI")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        // Appended .precision(.fractionLength(2))
                         Text("₹\(viewModel.emi.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                             .font(.title2).bold()
                             .foregroundColor(.mainBlue)
@@ -140,7 +141,6 @@ struct BreakdownRow: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             Spacer()
-            // Appended .precision(.fractionLength(2))
             Text("₹\(amount.formatted(.number.grouping(.automatic).precision(.fractionLength(2))))")
                 .font(.subheadline).bold()
                 .foregroundColor(.primary)
@@ -184,7 +184,6 @@ struct DonutChartView: View {
                 Text("Total")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                // Appended .precision(.fractionLength(2))
                 Text("₹\(total.formatted(.number.notation(.compactName).precision(.fractionLength(2))))")
                     .font(.title2).bold()
                     .foregroundColor(.primary)
